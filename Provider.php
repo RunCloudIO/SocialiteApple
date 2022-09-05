@@ -132,7 +132,7 @@ class Provider extends AbstractProvider
         if ($token->getClaim('iss') !== self::URL) {
             throw new InvalidStateException('Invalid Issuer', Response::HTTP_UNAUTHORIZED);
         }
-        if ($token->isExpired()) {
+        if ($token->isExpired(now())) {
             throw new InvalidStateException('Token Expired', Response::HTTP_UNAUTHORIZED);
         }
 
@@ -147,7 +147,7 @@ class Provider extends AbstractProvider
         $kid = $token->getHeader('kid');
 
         if (isset($publicKeys[$kid])) {
-            $publicKey = openssl_pkey_get_details($publicKeys[$kid]);
+            $publicKey = openssl_pkey_get_details($publicKeys[$kid]->getKeyMaterial());
 
             if ($token->verify($signer, $publicKey['key'])) {
                 return true;
