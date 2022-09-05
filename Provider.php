@@ -147,7 +147,7 @@ class Provider extends AbstractProvider
         $kid = $token->getHeader('kid');
 
         if (isset($publicKeys[$kid])) {
-            $publicKey = openssl_pkey_get_details($publicKeys[$kid]->getKeyMaterial());
+            $publicKey = openssl_pkey_get_details($publicKeys[$kid]);
 
             if ($token->verify($signer, $publicKey['key'])) {
                 return true;
